@@ -1,0 +1,26 @@
+
+version: "3.9"  # optional since v1.27.0
+services:
+  spotify_server:
+    container_name: spotify_api_go
+    build: ./
+    networks:
+      - web
+    environment:
+      - DB_USER={DB_USER}
+      - DB_PORT={DB_PORT}
+      - DB_IP=postgres
+      - DB_TABLE={DB_TABLE}
+      - DB_PASS={DB_PASS}
+    labels:
+      - traefik.http.routers.spotify_server.rule=Host(`spotify-go-api.batzz.io`)
+      - traefik.http.routers.spotify_server.tls=true
+      - traefik.http.routers.spotify_server.tls.certresolver=lets-encrypt
+
+
+networks:
+  web:
+    external: true
+  default:
+    external:
+      name: database
